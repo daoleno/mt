@@ -1,0 +1,1 @@
+ag -l --go | entr -c -r sh run.sh
