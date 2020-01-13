@@ -19,12 +19,12 @@ func parseCmd() {
 	switch os.Args[1] {
 	case "new":
 		filename := os.Args[2]
-		err := newfile(filename)
+		err := newFile(filename)
 		if err != nil {
 			panic(err)
 		}
 	case "ls":
-		files, err := lsfile()
+		files, err := lsFile()
 		for _, f := range files {
 			fmt.Println(f.Name(), f.ModTime().Format("2006-01-02 15:04:05"))
 		}
@@ -33,24 +33,34 @@ func parseCmd() {
 		}
 	case "open":
 		filename := os.Args[2]
-		err := openfile(filename)
+		err := openFile(filename)
+		if err != nil {
+			panic(err)
+		}
+	case "delete":
+		filename := os.Args[2]
+		err := deleteFile(filename)
+		if err != nil {
+			panic(err)
+		}
+	case "clean":
+		err := deleteAllFile()
 		if err != nil {
 			panic(err)
 		}
 	case "encrypt":
 		key := os.Args[2]
-		err := encryptfile(key)
+		err := encryptFile(key)
 		if err != nil {
 			panic(err)
 		}
 	case "decrypt":
 		key := os.Args[2]
-		err := decryptfile(key)
+		err := decryptFile(key)
 		if err != nil {
 			panic(err)
 		}
 	}
-
 }
 
 func defaultDir() string {
@@ -61,7 +71,7 @@ func defaultDir() string {
 	return usr.HomeDir + "/" + defaultDirPath
 }
 
-func newfile(name string) error {
+func newFile(name string) error {
 	// Check if directory exist and create if does not exist
 	mkDir(defaultDir())
 
@@ -78,7 +88,7 @@ func newfile(name string) error {
 	return nil
 }
 
-func lsfile() ([]os.FileInfo, error) {
+func lsFile() ([]os.FileInfo, error) {
 	files, err := ioutil.ReadDir(defaultDir())
 	if err != nil {
 		return nil, err
@@ -86,16 +96,43 @@ func lsfile() ([]os.FileInfo, error) {
 	return files, nil
 }
 
-func openfile(name string) error {
-	err := newfile(name)
+func openFile(name string) error {
+	err := newFile(name)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func encryptfile(key string) error {
-	files, err := lsfile()
+func deleteFile(name string) error {
+	files, err := lsFile()
+	if err != nil {
+		return err
+	}
+	for _, fileinfo := range files {
+		if fileinfo.Name() == name {
+			os.Remove(defaultDir() + "/" + fileinfo.Name())
+		}
+	}
+	return nil
+}
+
+func deleteAllFile() error {
+	files, err := lsFile()
+	if err != nil {
+		return nil
+	}
+	for _, fileinfo := range files {
+		err := deleteFile(fileinfo.Name())
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func encryptFile(key string) error {
+	files, err := lsFile()
 	if err != nil {
 		return err
 	}
@@ -120,8 +157,8 @@ func encryptfile(key string) error {
 	return nil
 }
 
-func decryptfile(key string) error {
-	files, err := lsfile()
+func decryptFile(key string) error {
+	files, err := lsFile()
 	if err != nil {
 		return err
 	}
