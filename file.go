@@ -2,28 +2,16 @@ package main
 
 import (
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
-	"os/user"
 )
-
-const defaultDirPath = ".mt/data"
-
-func defaultDir() string {
-	usr, err := user.Current()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return usr.HomeDir + "/" + defaultDirPath
-}
 
 func newFile(name string) error {
 	// Check if directory exist and create if does not exist
-	mkDir(defaultDir())
+	mkDir(dataDir())
 
 	// Open file with vim
-	cmd := exec.Command("vim", defaultDir()+"/"+name)
+	cmd := exec.Command("vim", dataDir()+"/"+name)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -35,8 +23,8 @@ func newFile(name string) error {
 	return nil
 }
 
-func lsFile() ([]os.FileInfo, error) {
-	files, err := ioutil.ReadDir(defaultDir())
+func listFile() ([]os.FileInfo, error) {
+	files, err := ioutil.ReadDir(dataDir())
 	if err != nil {
 		return nil, err
 	}
@@ -52,20 +40,20 @@ func openFile(name string) error {
 }
 
 func deleteFile(name string) error {
-	files, err := lsFile()
+	files, err := listFile()
 	if err != nil {
 		return err
 	}
 	for _, fileinfo := range files {
 		if fileinfo.Name() == name {
-			os.Remove(defaultDir() + "/" + fileinfo.Name())
+			os.Remove(dataDir() + "/" + fileinfo.Name())
 		}
 	}
 	return nil
 }
 
 func deleteAllFile() error {
-	files, err := lsFile()
+	files, err := listFile()
 	if err != nil {
 		return nil
 	}
@@ -79,14 +67,14 @@ func deleteAllFile() error {
 }
 
 func encryptFile(key string) error {
-	files, err := lsFile()
+	files, err := listFile()
 	if err != nil {
 		return err
 	}
 
 	for _, fileinfo := range files {
 		if fileinfo.Mode().IsRegular() {
-			plaintext, err := ioutil.ReadFile(defaultDir() + "/" + fileinfo.Name())
+			plaintext, err := ioutil.ReadFile(dataDir() + "/" + fileinfo.Name())
 			if err != nil {
 				return err
 			}
@@ -95,7 +83,7 @@ func encryptFile(key string) error {
 				return err
 			}
 
-			err = ioutil.WriteFile(defaultDir()+"/"+fileinfo.Name(), encryptedText, 0644)
+			err = ioutil.WriteFile(dataDir()+"/"+fileinfo.Name(), encryptedText, 0644)
 			if err != nil {
 				return nil
 			}
@@ -105,14 +93,14 @@ func encryptFile(key string) error {
 }
 
 func decryptFile(key string) error {
-	files, err := lsFile()
+	files, err := listFile()
 	if err != nil {
 		return err
 	}
 
 	for _, fileinfo := range files {
 		if fileinfo.Mode().IsRegular() {
-			plaintext, err := ioutil.ReadFile(defaultDir() + "/" + fileinfo.Name())
+			plaintext, err := ioutil.ReadFile(dataDir() + "/" + fileinfo.Name())
 			if err != nil {
 				return err
 			}
@@ -121,7 +109,7 @@ func decryptFile(key string) error {
 				return err
 			}
 
-			err = ioutil.WriteFile(defaultDir()+"/"+fileinfo.Name(), decryptedText, 0644)
+			err = ioutil.WriteFile(dataDir()+"/"+fileinfo.Name(), decryptedText, 0644)
 			if err != nil {
 				return nil
 			}

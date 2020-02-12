@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"path"
+	"strings"
 
 	"github.com/urfave/cli/v2"
 )
@@ -44,7 +47,7 @@ func parseCmd() {
 				Usage: "List all thoughts",
 				Action: func(c *cli.Context) error {
 					// log.Println("List all thoughts")
-					files, err := lsFile()
+					files, err := listFile()
 					if err != nil {
 						return err
 					}
@@ -83,10 +86,45 @@ func parseCmd() {
 				Usage: "Decrypt all thoughts",
 				Action: func(c *cli.Context) error {
 					key := c.Args().First()
-					err := encryptFile(key)
+					err := decryptFile(key)
 					if err != nil {
 						return err
 					}
+					return nil
+				},
+			},
+			{
+				Name:  "render",
+				Usage: "Render all markdown to beautiful html",
+				Action: func(c *cli.Context) error {
+					files, err := listFile()
+					if err != nil {
+						return err
+					}
+
+					for _, fileinfo := range files {
+						if fileinfo.Mode().IsRegular() {
+							plaintext, err := ioutil.ReadFile(dataDir() + "/" + fileinfo.Name())
+							if err != nil {
+								return err
+							}
+							htmltext := render(plaintext)
+							mkDir(renderDir())
+							err = ioutil.WriteFile(renderDir()+"/"+strings.TrimSuffix(fileinfo.Name(), path.Ext(fileinfo.Name()))+".html", htmltext, 0644)
+							if err != nil {
+								return err
+							}
+						}
+					}
+					fmt.Printf("All your thoughts is generated in %s\n", renderDir())
+					return nil
+				},
+			},
+			{
+				Name:  "web",
+				Usage: "Server static html page",
+				Action: func(c *cli.Context) error {
+					serveStatic()
 					return nil
 				},
 			},
