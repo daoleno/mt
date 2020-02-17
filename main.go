@@ -47,7 +47,7 @@ func parseCmd() {
 				Usage: "List all thoughts",
 				Action: func(c *cli.Context) error {
 					// log.Println("List all thoughts")
-					files, err := listFile()
+					files, err := listDataFile()
 					if err != nil {
 						return err
 					}
@@ -97,7 +97,7 @@ func parseCmd() {
 				Name:  "render",
 				Usage: "Render all markdown to beautiful html",
 				Action: func(c *cli.Context) error {
-					files, err := listFile()
+					files, err := listDataFile()
 					if err != nil {
 						return err
 					}

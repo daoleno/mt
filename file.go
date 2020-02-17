@@ -23,8 +23,24 @@ func newFile(name string) error {
 	return nil
 }
 
-func listFile() ([]os.FileInfo, error) {
-	files, err := ioutil.ReadDir(dataDir())
+func listFile(dir string) ([]os.FileInfo, error) {
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+	return files, nil
+}
+
+func listDataFile() ([]os.FileInfo, error) {
+	files, err := listFile(dataDir())
+	if err != nil {
+		return nil, err
+	}
+	return files, nil
+}
+
+func listRenderFile() ([]os.FileInfo, error) {
+	files, err := listFile(renderDir())
 	if err != nil {
 		return nil, err
 	}
@@ -40,23 +56,38 @@ func openFile(name string) error {
 }
 
 func deleteFile(name string) error {
-	files, err := listFile()
+	// Delete data file
+	dataFiles, err := listDataFile()
 	if err != nil {
 		return err
 	}
-	for _, fileinfo := range files {
+	for _, fileinfo := range dataFiles {
 		if fileinfo.Name() == name {
 			os.Remove(dataDir() + "/" + fileinfo.Name())
 		}
 	}
+
+	// Delete render file
+	renderFiles, err := listRenderFile()
+	for _, fileinfo := range renderFiles {
+		if fileinfo.Name() == name {
+			os.Remove(renderDir() + "/" + fileinfo.Name())
+		}
+	}
+
 	return nil
 }
 
 func deleteAllFile() error {
-	files, err := listFile()
+	dataFiles, err := listDataFile()
 	if err != nil {
-		return nil
+		return err
 	}
+	renderFiles, err := listRenderFile()
+	if err != nil {
+		return err
+	}
+	files := append(dataFiles, renderFiles...)
 	for _, fileinfo := range files {
 		err := deleteFile(fileinfo.Name())
 		if err != nil {
@@ -67,7 +98,7 @@ func deleteAllFile() error {
 }
 
 func encryptFile(key string) error {
-	files, err := listFile()
+	files, err := listDataFile()
 	if err != nil {
 		return err
 	}
@@ -93,7 +124,7 @@ func encryptFile(key string) error {
 }
 
 func decryptFile(key string) error {
-	files, err := listFile()
+	files, err := listDataFile()
 	if err != nil {
 		return err
 	}
