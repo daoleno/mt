@@ -30,6 +30,18 @@ func parseCmd() {
 				},
 			},
 			{
+				Name:  "cat",
+				Usage: "View a thought",
+				Action: func(c *cli.Context) error {
+					filename := c.Args().First()
+					err := catFile(filename)
+					if err != nil {
+						return err
+					}
+					return nil
+				},
+			},
+			{
 				Name:  "delete",
 				Usage: "Delete a thought",
 				Action: func(c *cli.Context) error {

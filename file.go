@@ -54,6 +54,21 @@ func openFile(name string) error {
 	}
 	return nil
 }
+func catFile(name string) error {
+	// Check if directory exist and create if does not exist
+	mkDir(dataDir())
+
+	// Exec cat command
+	cmd := exec.Command("cat", dataDir()+"/"+name)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func deleteFile(name string) error {
 	// Delete data file
