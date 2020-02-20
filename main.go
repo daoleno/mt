@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"sort"
 	"strings"
 
 	"github.com/urfave/cli/v2"
@@ -63,6 +64,12 @@ func parseCmd() {
 					if err != nil {
 						return err
 					}
+					// Sort file by file modtime
+					sort.Slice(files, func(i, j int) bool {
+						return files[i].ModTime().After(files[j].ModTime())
+					})
+
+					// Print file
 					for _, f := range files {
 						fmt.Println(f.Name(), f.ModTime().Format("2006-01-02 15:04:05"))
 					}
