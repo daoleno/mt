@@ -14,8 +14,9 @@ import (
 
 func parseCmd() {
 	app := &cli.App{
-		Name:  "My Thought",
-		Usage: "Rocord all my thoughts",
+		Name:                 "My Thought",
+		Usage:                "Rocord all my thoughts",
+		EnableBashCompletion: true,
 		Commands: []*cli.Command{
 			{
 				Name:  "open",
@@ -29,6 +30,7 @@ func parseCmd() {
 					}
 					return nil
 				},
+				BashComplete: bashCompleteFile,
 			},
 			{
 				Name:  "cat",
@@ -41,6 +43,7 @@ func parseCmd() {
 					}
 					return nil
 				},
+				BashComplete: bashCompleteFile,
 			},
 			{
 				Name:  "delete",
@@ -54,6 +57,7 @@ func parseCmd() {
 					}
 					return nil
 				},
+				BashComplete: bashCompleteFile,
 			},
 			{
 				Name:  "list",
