@@ -75,7 +75,8 @@ func parseCmd() {
 
 					// Print file
 					for _, f := range files {
-						fmt.Println(f.Name(), f.ModTime().Format("2006-01-02 15:04:05"))
+						// TODO: Chinese and English is not aligned correctly.
+						fmt.Printf("%-30s\t%s\n", f.Name(), f.ModTime().Format("2006-01-02 15:04:05"))
 					}
 					return nil
 				},
