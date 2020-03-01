@@ -54,6 +54,7 @@ func openFile(name string) error {
 	}
 	return nil
 }
+
 func catFile(name string) error {
 	// Check if directory exist and create if does not exist
 	mkDir(dataDir())
@@ -64,6 +65,16 @@ func catFile(name string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func renameFile(oldName, newName string) error {
+	oldName = dataDir() + "/" + oldName
+	newName = dataDir() + "/" + newName
+	err := os.Rename(oldName, newName)
 	if err != nil {
 		return err
 	}

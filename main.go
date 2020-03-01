@@ -60,6 +60,23 @@ func parseCmd() {
 				BashComplete: bashCompleteFile,
 			},
 			{
+				Name:  "rename",
+				Usage: "Rename a thought",
+				Action: func(c *cli.Context) error {
+					if c.Args().Len() != 2 {
+						return fmt.Errorf("Please provide both old and new name")
+					}
+					oldName := c.Args().Get(0)
+					newName := c.Args().Get(1)
+					err := renameFile(oldName, newName)
+					if err != nil {
+						return err
+					}
+					return nil
+				},
+				BashComplete: bashCompleteFile,
+			},
+			{
 				Name:  "list",
 				Usage: "List all thoughts",
 				Action: func(c *cli.Context) error {
