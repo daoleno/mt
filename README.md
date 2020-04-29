@@ -1,6 +1,8 @@
 # MT - My thoughts
 
-Record your secret thoughts. You own your data. Encrypted!
+Record your valuable thoughts on terminal.
+
+[![asciicast](https://asciinema.org/a/325041.svg)](https://asciinema.org/a/325041)
 
 ## Build
 
@@ -14,18 +16,46 @@ go build .
 go install .
 ```
 
+## Usage
+
+```
+NAME:
+   My Thought - Rocord all my thoughts
+
+USAGE:
+   mt [global options] command [command options] [arguments...]
+
+COMMANDS:
+   open     Open a thought
+   cat      View a thought
+   delete   Delete a thought
+   list     List all thoughts
+   clean    Clean all thoughts
+   encrypt  Encrypt all thoughts
+   decrypt  Decrypt all thoughts
+   render   Render all markdown to beautiful html
+   web      Server static html page
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h  show help (default: false)
+```
+
 ## Support bash/zsh autocomplete
 
 ### Run following command to enable auto-complete.
+
 ```zsh
 #bash
-PROG=mt source autocomplete/bash_autocomplete 
+PROG=mt source autocomplete/bash_autocomplete
 #zsh
 PROG=mt source autocomplete/zsh_autocomplete
 ```
+
 ### Distribution and Persistent Autocompletion
 
 #### Bash Support
+
 MacOS
 
 Copy `autocomplete/bash_autocomplete` into `/usr/local/etc/bash_completion.d` and rename it to the name `mt`. Don't forget to source the file or restart your shell to activate the auto-completion.
@@ -55,29 +85,4 @@ _cli_zsh_autocomplete() {
 }
 
 compdef _cli_zsh_autocomplete $PROG
-```
-
-## Usage 
-
-```
-NAME:
-   My Thought - Rocord all my thoughts
-
-USAGE:
-   mt [global options] command [command options] [arguments...]
-
-COMMANDS:
-   open     Open a thought
-   cat      View a thought
-   delete   Delete a thought
-   list     List all thoughts
-   clean    Clean all thoughts
-   encrypt  Encrypt all thoughts
-   decrypt  Decrypt all thoughts
-   render   Render all markdown to beautiful html
-   web      Server static html page
-   help, h  Shows a list of commands or help for one command
-
-GLOBAL OPTIONS:
-   --help, -h  show help (default: false)
 ```
