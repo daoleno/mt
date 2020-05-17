@@ -4,18 +4,31 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+
+	"github.com/go-git/go-git/v5"
 )
 
 func newFile(name string) error {
 	// Check if directory exist and create if does not exist
 	mkDir(dataDir())
 
+	// Init git repo
+	_, err := git.PlainInit(dataDir(), false)
+	if err != nil {
+		if err != git.ErrRepositoryAlreadyExists {
+			panic(err)
+		}
+	}
+
+	// Monitor git repo
+	go Monitor(dataDir())
+
 	// Open file with vim
 	cmd := exec.Command("vim", dataDir()+"/"+name)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		return err
 	}
@@ -82,6 +95,7 @@ func renameFile(oldName, newName string) error {
 }
 
 func deleteFile(name string) error {
+	go Monitor(dataDir())
 	// Delete data file
 	dataFiles, err := listDataFile()
 	if err != nil {
