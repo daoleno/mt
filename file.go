@@ -2,10 +2,10 @@ package main
 
 import (
 	"io/ioutil"
+	"mt/vcs"
 	"os"
 	"os/exec"
-
-	"github.com/go-git/go-git/v5"
+	"strings"
 )
 
 func newFile(name string) error {
@@ -13,11 +13,10 @@ func newFile(name string) error {
 	mkDir(dataDir())
 
 	// Init git repo
-	_, err := git.PlainInit(dataDir(), false)
+	git := vcs.ByCmd("git")
+	err := git.Init(dataDir())
 	if err != nil {
-		if err != git.ErrRepositoryAlreadyExists {
-			panic(err)
-		}
+		panic(err)
 	}
 
 	// Monitor git repo
@@ -40,6 +39,11 @@ func listFile(dir string) ([]os.FileInfo, error) {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return nil, err
+	}
+	for idx, f := range files {
+		if strings.Contains(f.Name(), ".git") {
+			files = append(files[:idx], files[idx+1:]...)
+		}
 	}
 	return files, nil
 }

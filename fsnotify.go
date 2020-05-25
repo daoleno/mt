@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"mt/vcs"
 	"strings"
 
 	"github.com/fsnotify/fsnotify"
@@ -32,8 +33,17 @@ func Monitor(dir string) {
 					if !strings.Contains(event.Name, ".swp") {
 						// Ignore vim .swp file
 
-						// git add && git commit
-						AddAndCommit()
+						// git add
+						git := vcs.ByCmd("git")
+						if err := git.AddAll(dataDir()); err != nil {
+							panic(err)
+						}
+
+						// git commit
+						if err := git.CommitAll(dataDir()); err != nil {
+							panic(err)
+						}
+
 					}
 				}
 			case err, ok := <-watcher.Errors:
