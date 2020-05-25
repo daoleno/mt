@@ -1,4 +1,4 @@
-package main
+package file
 
 import (
 	"crypto/aes"
@@ -9,7 +9,7 @@ import (
 	"io"
 )
 
-func encrypt(plaintext []byte, key []byte) ([]byte, error) {
+func Encrypt(plaintext []byte, key []byte) ([]byte, error) {
 	aes256key := sha256.Sum256(key)
 	c, err := aes.NewCipher(aes256key[:])
 	if err != nil {
@@ -29,7 +29,7 @@ func encrypt(plaintext []byte, key []byte) ([]byte, error) {
 	return gcm.Seal(nonce, nonce, plaintext, nil), nil
 }
 
-func decrypt(ciphertext []byte, key []byte) ([]byte, error) {
+func Decrypt(ciphertext []byte, key []byte) ([]byte, error) {
 	aes256key := sha256.Sum256(key)
 	c, err := aes.NewCipher(aes256key[:])
 	if err != nil {

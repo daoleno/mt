@@ -1,9 +1,11 @@
-package main
+package file
 
 import (
 	"log"
-	"mt/vcs"
 	"strings"
+
+	"github.com/daoleno/mt/utils"
+	"github.com/daoleno/mt/vcs"
 
 	"github.com/fsnotify/fsnotify"
 )
@@ -35,12 +37,12 @@ func Monitor(dir string) {
 
 						// git add
 						git := vcs.ByCmd("git")
-						if err := git.AddAll(dataDir()); err != nil {
+						if err := git.AddAll(utils.DataDir()); err != nil {
 							panic(err)
 						}
 
 						// git commit
-						if err := git.CommitAll(dataDir()); err != nil {
+						if err := git.CommitAll(utils.DataDir()); err != nil {
 							panic(err)
 						}
 

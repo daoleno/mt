@@ -1,29 +1,31 @@
-package main
+package file
 
 import (
 	"io/ioutil"
-	"mt/vcs"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/daoleno/mt/utils"
+	"github.com/daoleno/mt/vcs"
 )
 
 func newFile(name string) error {
 	// Check if directory exist and create if does not exist
-	mkDir(dataDir())
+	utils.MkDir(utils.DataDir())
 
 	// Init git repo
 	git := vcs.ByCmd("git")
-	err := git.Init(dataDir())
+	err := git.Init(utils.DataDir())
 	if err != nil {
 		panic(err)
 	}
 
 	// Monitor git repo
-	go Monitor(dataDir())
+	go Monitor(utils.DataDir())
 
 	// Open file with vim
-	cmd := exec.Command("vim", dataDir()+"/"+name)
+	cmd := exec.Command("vim", utils.DataDir()+"/"+name)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -48,23 +50,23 @@ func listFile(dir string) ([]os.FileInfo, error) {
 	return files, nil
 }
 
-func listDataFile() ([]os.FileInfo, error) {
-	files, err := listFile(dataDir())
+func ListDataFile() ([]os.FileInfo, error) {
+	files, err := listFile(utils.DataDir())
 	if err != nil {
 		return nil, err
 	}
 	return files, nil
 }
 
-func listRenderFile() ([]os.FileInfo, error) {
-	files, err := listFile(renderDir())
+func ListRenderFile() ([]os.FileInfo, error) {
+	files, err := listFile(utils.RenderDir())
 	if err != nil {
 		return nil, err
 	}
 	return files, nil
 }
 
-func openFile(name string) error {
+func OpenFile(name string) error {
 	err := newFile(name)
 	if err != nil {
 		return err
@@ -72,12 +74,12 @@ func openFile(name string) error {
 	return nil
 }
 
-func catFile(name string) error {
+func CatFile(name string) error {
 	// Check if directory exist and create if does not exist
-	mkDir(dataDir())
+	utils.MkDir(utils.DataDir())
 
 	// Exec cat command
-	cmd := exec.Command("cat", dataDir()+"/"+name)
+	cmd := exec.Command("cat", utils.DataDir()+"/"+name)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -88,9 +90,9 @@ func catFile(name string) error {
 	return nil
 }
 
-func renameFile(oldName, newName string) error {
-	oldName = dataDir() + "/" + oldName
-	newName = dataDir() + "/" + newName
+func RenameFile(oldName, newName string) error {
+	oldName = utils.DataDir() + "/" + oldName
+	newName = utils.DataDir() + "/" + newName
 	err := os.Rename(oldName, newName)
 	if err != nil {
 		return err
@@ -98,42 +100,42 @@ func renameFile(oldName, newName string) error {
 	return nil
 }
 
-func deleteFile(name string) error {
-	go Monitor(dataDir())
+func DeleteFile(name string) error {
+	go Monitor(utils.DataDir())
 	// Delete data file
-	dataFiles, err := listDataFile()
+	dataFiles, err := ListDataFile()
 	if err != nil {
 		return err
 	}
 	for _, fileinfo := range dataFiles {
 		if fileinfo.Name() == name {
-			os.Remove(dataDir() + "/" + fileinfo.Name())
+			os.Remove(utils.DataDir() + "/" + fileinfo.Name())
 		}
 	}
 
 	// Delete render file
-	renderFiles, err := listRenderFile()
+	renderFiles, err := ListRenderFile()
 	for _, fileinfo := range renderFiles {
 		if fileinfo.Name() == name {
-			os.Remove(renderDir() + "/" + fileinfo.Name())
+			os.Remove(utils.RenderDir() + "/" + fileinfo.Name())
 		}
 	}
 
 	return nil
 }
 
-func deleteAllFile() error {
-	dataFiles, err := listDataFile()
+func DeleteAllFile() error {
+	dataFiles, err := ListDataFile()
 	if err != nil {
 		return err
 	}
-	renderFiles, err := listRenderFile()
+	renderFiles, err := ListRenderFile()
 	if err != nil {
 		return err
 	}
 	files := append(dataFiles, renderFiles...)
 	for _, fileinfo := range files {
-		err := deleteFile(fileinfo.Name())
+		err := DeleteFile(fileinfo.Name())
 		if err != nil {
 			return err
 		}
@@ -141,24 +143,24 @@ func deleteAllFile() error {
 	return nil
 }
 
-func encryptFile(key string) error {
-	files, err := listDataFile()
+func EncryptFile(key string) error {
+	files, err := ListDataFile()
 	if err != nil {
 		return err
 	}
 
 	for _, fileinfo := range files {
 		if fileinfo.Mode().IsRegular() {
-			plaintext, err := ioutil.ReadFile(dataDir() + "/" + fileinfo.Name())
+			plaintext, err := ioutil.ReadFile(utils.DataDir() + "/" + fileinfo.Name())
 			if err != nil {
 				return err
 			}
-			encryptedText, err := encrypt(plaintext, []byte(key))
+			encryptedText, err := Encrypt(plaintext, []byte(key))
 			if err != nil {
 				return err
 			}
 
-			err = ioutil.WriteFile(dataDir()+"/"+fileinfo.Name(), encryptedText, 0644)
+			err = ioutil.WriteFile(utils.DataDir()+"/"+fileinfo.Name(), encryptedText, 0644)
 			if err != nil {
 				return nil
 			}
@@ -167,24 +169,24 @@ func encryptFile(key string) error {
 	return nil
 }
 
-func decryptFile(key string) error {
-	files, err := listDataFile()
+func DecryptFile(key string) error {
+	files, err := ListDataFile()
 	if err != nil {
 		return err
 	}
 
 	for _, fileinfo := range files {
 		if fileinfo.Mode().IsRegular() {
-			plaintext, err := ioutil.ReadFile(dataDir() + "/" + fileinfo.Name())
+			plaintext, err := ioutil.ReadFile(utils.DataDir() + "/" + fileinfo.Name())
 			if err != nil {
 				return err
 			}
-			decryptedText, err := decrypt(plaintext, []byte(key))
+			decryptedText, err := Decrypt(plaintext, []byte(key))
 			if err != nil {
 				return err
 			}
 
-			err = ioutil.WriteFile(dataDir()+"/"+fileinfo.Name(), decryptedText, 0644)
+			err = ioutil.WriteFile(utils.DataDir()+"/"+fileinfo.Name(), decryptedText, 0644)
 			if err != nil {
 				return nil
 			}
