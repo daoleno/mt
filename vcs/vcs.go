@@ -61,7 +61,7 @@ var vcsGit = &Cmd{
 	InitCmd:      "init {dir}",
 	AddAllCmd:    "add -A",
 	CommitAllCmd: "commit -a -m {message}",
-	DiffStatCmd:  "diff --stat @{2.days.ago}",
+	DiffStatCmd:  "diff --numstat --shortstat {start} {end}",
 
 	Scheme: []string{"git", "https", "http", "git+ssh"},
 }
@@ -150,8 +150,23 @@ func (v *Cmd) CommitAll(dir string) error {
 }
 
 // DiffStat Show changes between commits, commit and working tree, etc
-func (v *Cmd) DiffStat(dir string) error {
-	return v.run(dir, v.DiffStatCmd)
+func (v *Cmd) DiffStat(dir string, start, end string) ([]byte, error) {
+	if len(start) != 0 {
+		start = "HEAD@{" + start + "}"
+	} else {
+		start = "HEAD"
+	}
+	if len(end) != 0 {
+		end = "HEAD@{" + end + "}"
+	} else {
+		end = "HEAD"
+	}
+
+	out, err := v.runOutput(dir, v.DiffStatCmd, "start", start, "end", end)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 // FromDir inspects dir and its parents to determine the
