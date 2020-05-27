@@ -38,12 +38,14 @@ func Monitor(dir string) {
 						// git add
 						git := vcs.ByCmd("git")
 						if err := git.AddAll(utils.DataDir()); err != nil {
-							panic(err)
+							// panic(err)
+							continue
 						}
 
 						// git commit
 						if err := git.CommitAll(utils.DataDir()); err != nil {
-							panic(err)
+							// panic(err)
+							continue
 						}
 
 					}

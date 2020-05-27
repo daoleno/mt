@@ -141,12 +141,12 @@ func (v *Cmd) Init(dir string) error {
 
 // AddAll Add file contents to the index
 func (v *Cmd) AddAll(dir string) error {
-	return v.run(dir, v.AddAllCmd)
+	return v.runVerboseOnly(dir, v.AddAllCmd)
 }
 
 // CommitAll Record changes to the repository
 func (v *Cmd) CommitAll(dir string) error {
-	return v.run(dir, v.CommitAllCmd, "message", "auto commit")
+	return v.runVerboseOnly(dir, v.CommitAllCmd, "message", "auto commit")
 }
 
 // DiffStat Show changes between commits, commit and working tree, etc
