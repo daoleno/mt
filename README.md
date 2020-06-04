@@ -27,6 +27,7 @@ Usage:
 Available Commands:
   cat         View a thought
   clean       Clean all thoughts
+  completion  Generates bash/zsh completion scripts
   decrypt     Decrypt all thoughts
   delete      Delete a thought
   encrypt     Encrypt all thoughts
@@ -35,12 +36,28 @@ Available Commands:
   open        Open a thought
   rename      Rename a thought
   render      Render all markdown to beautiful html
+  report      Weekly report
   web         Server static html page
 
 Flags:
-      --config string   config file (default is $HOME/.mt.yaml)
-  -h, --help            help for mt
-  -t, --toggle          Help message for toggle
+  -h, --help   help for mt
 
 Use "mt [command] --help" for more information about a command.
+```
+
+## Completion
+
+### Zsh
+
+Generate completion script
+
+```sh
+mt completion
+```
+
+Put somewhere in your `$fpath` named `_mt`
+
+```
+# example path
+/usr/local/share/zsh/site-functions/_mt
 ```

@@ -18,6 +18,7 @@ var deleteCmd = &cobra.Command{
 		}
 		return nil
 	},
+	ValidArgs: bashCompleteFile(),
 }
 
 func init() {

@@ -17,6 +17,7 @@ var catCmd = &cobra.Command{
 		}
 		return nil
 	},
+	ValidArgs: bashCompleteFile(),
 }
 
 func init() {

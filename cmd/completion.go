@@ -5,6 +5,9 @@ Copyright © 2020 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"log"
+
+	"github.com/daoleno/mt/file"
 	"github.com/spf13/cobra"
 )
 
@@ -34,4 +37,17 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// completionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func bashCompleteFile() []string {
+	files, err := file.ListDataFile()
+	if err != nil {
+		log.Fatal(err)
+		return nil
+	}
+	var fName []string
+	for _, f := range files {
+		fName = append(fName, f.Name())
+	}
+	return fName
 }

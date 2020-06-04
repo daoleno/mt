@@ -24,6 +24,7 @@ var renameCmd = &cobra.Command{
 		}
 		return nil
 	},
+	ValidArgs: bashCompleteFile(),
 }
 
 func init() {

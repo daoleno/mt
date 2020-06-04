@@ -18,6 +18,7 @@ var openCmd = &cobra.Command{
 		}
 		return nil
 	},
+	ValidArgs: bashCompleteFile(),
 }
 
 func init() {
@@ -32,4 +33,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// openCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
 }
