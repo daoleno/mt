@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"errors"
+
 	"github.com/daoleno/mt/file"
 	"github.com/spf13/cobra"
 )
@@ -10,6 +12,9 @@ var catCmd = &cobra.Command{
 	Use:   "cat",
 	Short: "View a thought",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) != 1 {
+			return errors.New("need file name")
+		}
 		filename := args[0]
 		err := file.CatFile(filename)
 		if err != nil {

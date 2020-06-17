@@ -5,10 +5,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// deleteCmd represents the delete command
+// deleteCmd represents the remove command
 var deleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Delete a thought",
+	Use:   "remove",
+	Short: "Remove a thought",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		filename := args[0]
 		// log.Println("Delete thought: ", filename)

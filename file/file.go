@@ -14,6 +14,9 @@ func newFile(name string) error {
 	// Check if directory exist and create if does not exist
 	utils.MkDir(utils.DataDir())
 
+	// Place a .gitignore file
+	utils.AddGitIgnore()
+
 	// Init git repo
 	git := vcs.ByCmd("git")
 	err := git.Init(utils.DataDir())
@@ -42,12 +45,14 @@ func listFile(dir string) ([]os.FileInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	for idx, f := range files {
-		if strings.Contains(f.Name(), ".git") {
-			files = append(files[:idx], files[idx+1:]...)
+	var filtedFiles []os.FileInfo
+	for _, f := range files {
+		if strings.HasPrefix(f.Name(), ".") {
+			continue
 		}
+		filtedFiles = append(filtedFiles, f)
 	}
-	return files, nil
+	return filtedFiles, nil
 }
 
 func ListDataFile() ([]os.FileInfo, error) {

@@ -6,7 +6,7 @@ import (
 	"os/user"
 )
 
-// Check if directory exist and create if does not exist
+// MkDir Check if directory exist and create if does not exist
 func MkDir(dir string) {
 	_, err := os.Stat(dir)
 	if os.IsNotExist(err) {
@@ -17,6 +17,22 @@ func MkDir(dir string) {
 	}
 }
 
+// AddGitIgnore add a .gitignore file in data dir
+func AddGitIgnore() {
+	ignoreFile := DataDir() + "/.gitignore"
+	_, err := os.Stat(ignoreFile)
+	if err == nil {
+		return
+	}
+
+	f, err := os.OpenFile(ignoreFile, os.O_RDWR|os.O_CREATE, 0644)
+	if err != nil {
+		panic(err)
+	}
+	f.WriteString(".*")
+}
+
+// TODO: Replace with os.ExpandEnv()
 func homeDir() string {
 	usr, err := user.Current()
 	if err != nil {

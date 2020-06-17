@@ -29,14 +29,14 @@ Available Commands:
   clean       Clean all thoughts
   completion  Generates bash/zsh completion scripts
   decrypt     Decrypt all thoughts
-  delete      Delete a thought
+  remove      Remove a thought
   encrypt     Encrypt all thoughts
   help        Help about any command
   list        List all thoughts
   open        Open a thought
   rename      Rename a thought
   render      Render all markdown to beautiful html
-  report      Weekly report
+  report      Report
   web         Server static html page
 
 Flags:
