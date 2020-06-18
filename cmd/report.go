@@ -49,8 +49,9 @@ var reportCmd = &cobra.Command{
 			return err
 		}
 		colors := []string{"green", "red"}
+		categories := []string{"insertions", "deletions"}
 
-		tgraph.Chart("Writing Report\n", labels, data, colors, 50, true, "")
+		tgraph.Chart("", labels, data, categories, colors, 50, true, "")
 		return nil
 	},
 }
