@@ -5,14 +5,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var flagEditor string
+
 // openCmd represents the open command
 var openCmd = &cobra.Command{
 	Use:   "open",
 	Short: "Open a thought",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		filename := args[0]
-		// log.Println("Open thought: ", filename)
-		err := file.OpenFile(filename)
+		err := file.OpenFile(filename, flagEditor)
 		if err != nil {
 			return err
 		}
@@ -32,6 +33,6 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// openCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	openCmd.Flags().StringVar(&flagEditor, "editor", "vim", "Open with editor.")
 
 }

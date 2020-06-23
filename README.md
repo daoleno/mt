@@ -1,8 +1,6 @@
 # MT - My thoughts
 
-Record your valuable thoughts on terminal.
-
-[![asciicast](https://asciinema.org/a/325041.svg)](https://asciinema.org/a/325041)
+Personal note taking tools in the terminal
 
 ## Build
 
@@ -13,7 +11,7 @@ go build .
 ## Install
 
 ```zsh
-go install .
+go install github.com/daoleno/mt
 ```
 
 ## Usage
@@ -43,6 +41,30 @@ Flags:
   -h, --help   help for mt
 
 Use "mt [command] --help" for more information about a command.
+```
+
+## Example
+
+Show writing report
+
+> Graph
+
+![img](imgs/report.png)
+
+> Raw
+
+```sh
+➜  mt git:(master) ✗ mt report --raw
+9       0       a-new-way-to-write-blog.md
+5       0       daily.txt
+60      0       debt.md
+1       0       games.md
+2       0       inspiration.md
+2       0       mt-todo.md
+18      0       notes.md
+1       0       stackoverflow-keys.md
+3       3       tgraph-todo.md
+ 9 files changed, 101 insertions(+), 3 deletions(-)
 ```
 
 ## Completion

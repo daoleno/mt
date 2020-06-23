@@ -10,7 +10,7 @@ import (
 	"github.com/daoleno/mt/vcs"
 )
 
-func newFile(name string) error {
+func newFile(name string, editor string) error {
 	// Check if directory exist and create if does not exist
 	utils.MkDir(utils.DataDir())
 
@@ -28,7 +28,7 @@ func newFile(name string) error {
 	go Monitor(utils.DataDir())
 
 	// Open file with vim
-	cmd := exec.Command("vim", utils.DataDir()+"/"+name)
+	cmd := exec.Command(editor, utils.DataDir()+"/"+name)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -71,8 +71,8 @@ func ListRenderFile() ([]os.FileInfo, error) {
 	return files, nil
 }
 
-func OpenFile(name string) error {
-	err := newFile(name)
+func OpenFile(name string, editor string) error {
+	err := newFile(name, editor)
 	if err != nil {
 		return err
 	}
