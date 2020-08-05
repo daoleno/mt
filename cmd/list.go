@@ -5,6 +5,7 @@ import (
 	"sort"
 
 	"github.com/daoleno/mt/file"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -23,9 +24,16 @@ var listCmd = &cobra.Command{
 		})
 
 		// Print file
-		for _, f := range files {
+		for i, f := range files {
 			// TODO: Chinese and English is not aligned correctly.
-			fmt.Printf("%-30s\t%s\n", f.Name(), f.ModTime().Format("2006-01-02 15:04:05"))
+			// If index is odd, print colorful line
+			if i%2 != 0 {
+				color.Set(color.BgHiBlack)
+				color.Set(color.FgHiWhite)
+			}
+			fmt.Printf("%-30s\t%s", f.Name(), f.ModTime().Format("2006-01-02 15:04:05"))
+			color.Unset()
+			fmt.Println()
 		}
 		return nil
 	},
